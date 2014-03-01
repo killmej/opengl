@@ -25,7 +25,12 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 
 	public void renderMain(GL10 gl) {
 		MyGameThread gameThread = mGameThread;
-		GraphicUtil.drawCircle(gl, gameThread.mBallPos.mX, gameThread.mBallPos.mY, 16, gameThread.mBallRadius, 1.0f, 1.0f, 1.0f, 1.0f);
+		synchronized (gameThread) {
+			int target = gameThread.mBall.length;
+			for (int i = 0; i < target; i++) {
+				gameThread.mBall[i].draw(gl);
+			}
+		}
 	}
 
 	@Override
@@ -62,7 +67,6 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 		this.mOffsetY = (height - h) / 2;
 
 		Global.gl = gl;// GLコンテキストを保持する
-
 		// テクスチャをロードする
 		loadTextures(gl);
 	}

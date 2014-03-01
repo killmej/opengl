@@ -1,49 +1,26 @@
 package com.example.boundball;
+import java.util.Random;
 
+import android.util.Log;
 public class MyGameThread extends Thread {
 	private boolean mIsActive;
-	public Vector2D mBallPos; //ç¿ïW
-	public Vector2D mBallPower; //äµê´óÕ
-	public float mBallRadius; //îºåa
-	
+	public static final int TARGET_NUM = 10;//â~ÇÃêî
+	//ïWìI
+	public TargetBall[] mBall = new TargetBall[TARGET_NUM];
 	public ParticleSystem mParticleSystem;
 	
 	public MyGameThread() {
-		this.mBallPos = new Vector2D();
-		this.mBallPower = new Vector2D(0.1f,0.1f);
-		this.mBallRadius = 0.2f;
+		Random rand = Global.rand;
+		for (int i = 0; i < TARGET_NUM; i++) {
+			float x = rand.nextFloat() * 2.0f - 1.0f;
+			float y = rand.nextFloat() * 3.0f - 1.5f;
+			mBall[i] = new TargetBall(x, y, 0.02f, 0.02f,0.05f);
+		}
 	}
-
 	private void update() {
-		Vector2D ballPos = mBallPos;
-		Vector2D ballPower = mBallPower;
-		float ballRadius = mBallRadius;
-		
-		mBallPos.mX += mBallPower.mX;
-		mBallPos.mY += mBallPower.mY;
-		
-		float distanceU = 1.5f - ballPos.mY;
-		if (distanceU <= ballRadius) {
-			if (ballPower.mY > 0.0f) {
-				ballPower.mY = -ballPower.mY;
-			}
-		}
-		float distanceD = -(-1.5f - ballPos.mY);
-		if (distanceD <= ballRadius) {
-			if (ballPower.mY < 0.0f) {
-				ballPower.mY = -ballPower.mY;
-			}
-		}
-		float distanceR = 1.0f - ballPos.mX;
-		if (distanceR <= ballRadius) {
-			if (ballPower.mX > 0.0f) {
-				ballPower.mX = -ballPower.mX;
-			}
-		}
-		float distanceL = -(-1.0f - ballPos.mX);
-		if (distanceL <= ballRadius) {
-			if (ballPower.mX < 0.0f) {
-				ballPower.mX = -ballPower.mX;
+		synchronized (this) {
+			for (int i = 0; i < TARGET_NUM; i++) {
+				mBall[i].move();
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 public class GraphicUtil {
 	
